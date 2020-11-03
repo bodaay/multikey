@@ -5,7 +5,7 @@ import (
 	mathrand "math/rand"
 	"time"
 
-	"github.com/adrianosela/multikey/galois"
+	"github.com/bodaay/multikey/multikey/galois"
 )
 
 // Split takes an arbitrarily long secret and generates a `parts`

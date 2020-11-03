@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/adrianosela/multikey/keys"
-	"github.com/adrianosela/multikey/shamir"
+	"github.com/bodaay/multikey/multikey/keys"
+	"github.com/bodaay/multikey/multikey/shamir"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 
 	"fmt"
 
-	"github.com/adrianosela/multikey/keys"
+	"github.com/bodaay/multikey/multikey/keys"
 )
 
 const (

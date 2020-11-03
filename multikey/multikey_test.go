@@ -4,7 +4,7 @@ import (
 	"crypto/rsa"
 	"testing"
 
-	"github.com/adrianosela/multikey/keys"
+	"github.com/bodaay/multikey/multikey/keys"
 	"github.com/stretchr/testify/assert"
 )
 
