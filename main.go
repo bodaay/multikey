@@ -14,7 +14,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -22,14 +22,15 @@ import (
 
 	"github.com/bodaay/multikey/multikey"
 	"github.com/bodaay/multikey/multikey/keys"
+	"github.com/sethvargo/go-password/password"
 )
 
 const numberOfRandomEncKeysGenerated = 5
 const minNumberOfKeysToDecrypt = 3
-const randomPlainTextResticPasswordLength = 16
+const randomPlainTextResticPasswordLength = 32
 const pubKeyExtension = "kPubKey"
 const priKeyExtension = "kPriKey"
-const resticKeyExtension = "kMulKey"
+const passwordKeyExtension = "kMulKey"
 
 func printUsage(execName string) {
 	fmt.Printf("Usage To Generate Encryption Key Files: %s Generate DestinationFolder\n", execName)
@@ -147,17 +148,17 @@ func main() {
 		os.MkdirAll(path.Join(destinationPath, "key3"), os.ModePerm)
 		os.MkdirAll(path.Join(destinationPath, "key4"), os.ModePerm)
 		os.MkdirAll(path.Join(destinationPath, "key5"), os.ModePerm)
-		PubKey1FileName := path.Join(destinationPath, "key1", fmt.Sprintf("Pubkey1.%s", pubKeyExtension))
-		PubKey2FileName := path.Join(destinationPath, "key2", fmt.Sprintf("Pubkey2.%s", pubKeyExtension))
-		PubKey3FileName := path.Join(destinationPath, "key3", fmt.Sprintf("Pubkey3.%s", pubKeyExtension))
-		PubKey4FileName := path.Join(destinationPath, "key4", fmt.Sprintf("Pubkey4.%s", pubKeyExtension))
-		PubKey5FileName := path.Join(destinationPath, "key5", fmt.Sprintf("Pubkey5.%s", pubKeyExtension))
+		PubKey1FileName := path.Join(destinationPath, "key1", fmt.Sprintf("Pubkey.%s", pubKeyExtension))
+		PubKey2FileName := path.Join(destinationPath, "key2", fmt.Sprintf("Pubkey.%s", pubKeyExtension))
+		PubKey3FileName := path.Join(destinationPath, "key3", fmt.Sprintf("Pubkey.%s", pubKeyExtension))
+		PubKey4FileName := path.Join(destinationPath, "key4", fmt.Sprintf("Pubkey.%s", pubKeyExtension))
+		PubKey5FileName := path.Join(destinationPath, "key5", fmt.Sprintf("Pubkey.%s", pubKeyExtension))
 
-		PriKey1FileName := path.Join(destinationPath, "key1", fmt.Sprintf("Prikey1.%s", priKeyExtension))
-		PriKey2FileName := path.Join(destinationPath, "key2", fmt.Sprintf("Prikey2.%s", priKeyExtension))
-		PriKey3FileName := path.Join(destinationPath, "key3", fmt.Sprintf("Prikey3.%s", priKeyExtension))
-		PriKey4FileName := path.Join(destinationPath, "key4", fmt.Sprintf("Prikey4.%s", priKeyExtension))
-		PriKey5FileName := path.Join(destinationPath, "key5", fmt.Sprintf("Prikey5.%s", priKeyExtension))
+		PriKey1FileName := path.Join(destinationPath, "key1", fmt.Sprintf("Prikey.%s", priKeyExtension))
+		PriKey2FileName := path.Join(destinationPath, "key2", fmt.Sprintf("Prikey.%s", priKeyExtension))
+		PriKey3FileName := path.Join(destinationPath, "key3", fmt.Sprintf("Prikey.%s", priKeyExtension))
+		PriKey4FileName := path.Join(destinationPath, "key4", fmt.Sprintf("Prikey.%s", priKeyExtension))
+		PriKey5FileName := path.Join(destinationPath, "key5", fmt.Sprintf("Prikey.%s", priKeyExtension))
 
 		//generate the 5 keys
 
@@ -271,7 +272,7 @@ func main() {
 		// fmt.Println(radomResticPassword)
 
 	} else if command == "encrypt" {
-		ResticEncryptedKeyFile := path.Join(destinationPath, fmt.Sprintf("restic.key.%s", resticKeyExtension))
+		ResticEncryptedKeyFile := path.Join(destinationPath, fmt.Sprintf("password.key.%s", passwordKeyExtension))
 		//Read Public Keys from files
 		pubKey1FileName := os.Args[3]
 		pubKey2FileName := os.Args[4]
@@ -329,13 +330,17 @@ func main() {
 			panic(err)
 		}
 
-		chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyzåäö" + "0123456789" + "!@#$%^&*")
-		length := randomPlainTextResticPasswordLength
-		var b strings.Builder
-		for i := 0; i < length; i++ {
-			b.WriteRune(chars[rand.Intn(len(chars))])
+		// chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyzåäö" + "0123456789" + "!@#$%^&*")
+		// length := randomPlainTextResticPasswordLength
+		// var b strings.Builder
+		// for i := 0; i < length; i++ {
+		// 	b.WriteRune(chars[rand.Intn(len(chars))])
+		// }
+		res, err := password.Generate(32, 10, 10, false, true)
+		if err != nil {
+			log.Fatal(err)
 		}
-		radomResticPassword := b.String() // E.g. "ExcbsVQs"
+		radomResticPassword := res // E.g. "ExcbsVQs"
 
 		var pubs []*rsa.PublicKey
 		pubs = append(pubs, pubKey1PubRSA)
