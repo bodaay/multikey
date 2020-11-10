@@ -23,6 +23,7 @@ import (
 	"github.com/bodaay/multikey/multikey"
 	"github.com/bodaay/multikey/multikey/keys"
 	"github.com/sethvargo/go-password/password"
+	"github.com/skip2/go-qrcode"
 )
 
 const numberOfRandomEncKeysGenerated = 5
@@ -161,7 +162,8 @@ func main() {
 		PriKey5FileName := path.Join(destinationPath, "key5", fmt.Sprintf("Prikey.%s", priKeyExtension))
 
 		//generate the 5 keys
-
+		qrsize := 2048
+		qrerrorrecovery := qrcode.Medium
 		//Key 1
 		priKey1, pubKey1, err := keys.GenerateRSAKeyPair(2048)
 		if err != nil {
@@ -177,6 +179,14 @@ func main() {
 			panic(err)
 		}
 		err = ioutil.WriteFile(PriKey1FileName, priKey1Bytes, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+		err = qrcode.WriteFile(string(pubKey1Bytes), qrerrorrecovery, qrsize, PubKey1FileName+".png")
+		if err != nil {
+			panic(err)
+		}
+		err = qrcode.WriteFile(string(priKey1Bytes), qrerrorrecovery, qrsize, PriKey1FileName+".png")
 		if err != nil {
 			panic(err)
 		}
@@ -199,7 +209,14 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-
+		err = qrcode.WriteFile(string(pubKey2Bytes), qrerrorrecovery, qrsize, PubKey2FileName+".png")
+		if err != nil {
+			panic(err)
+		}
+		err = qrcode.WriteFile(string(priKey2Bytes), qrerrorrecovery, qrsize, PriKey2FileName+".png")
+		if err != nil {
+			panic(err)
+		}
 		//Key 3
 		priKey3, pubKey3, err := keys.GenerateRSAKeyPair(2048)
 		if err != nil {
@@ -215,6 +232,14 @@ func main() {
 			panic(err)
 		}
 		err = ioutil.WriteFile(PriKey3FileName, priKey3Bytes, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+		err = qrcode.WriteFile(string(pubKey3Bytes), qrerrorrecovery, qrsize, PubKey3FileName+".png")
+		if err != nil {
+			panic(err)
+		}
+		err = qrcode.WriteFile(string(priKey3Bytes), qrerrorrecovery, qrsize, PriKey3FileName+".png")
 		if err != nil {
 			panic(err)
 		}
@@ -236,6 +261,14 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		err = qrcode.WriteFile(string(pubKey4Bytes), qrerrorrecovery, qrsize, PubKey4FileName+".png")
+		if err != nil {
+			panic(err)
+		}
+		err = qrcode.WriteFile(string(priKey4Bytes), qrerrorrecovery, qrsize, PriKey4FileName+".png")
+		if err != nil {
+			panic(err)
+		}
 		//Key 5
 		priKey5, pubKey5, err := keys.GenerateRSAKeyPair(2048)
 		if err != nil {
@@ -254,22 +287,14 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-
-		// var pubs []*rsa.PublicKey
-		// pubs = append(pubs, pubKey1)
-		// pubs = append(pubs, pubKey2)
-		// pubs = append(pubs, pubKey3)
-		// pubs = append(pubs, pubKey4)
-		// pubs = append(pubs, pubKey5)
-		// mkEncryptedSecret, err := multikey.Encrypt([]byte(radomResticPassword), pubs, minNumberOfKeysToDecrypt)
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// err = ioutil.WriteFile(ResticEncryptedKeyFile, []byte(mkEncryptedSecret), os.ModePerm)
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// fmt.Println(radomResticPassword)
+		err = qrcode.WriteFile(string(pubKey5Bytes), qrerrorrecovery, qrsize, PubKey5FileName+".png")
+		if err != nil {
+			panic(err)
+		}
+		err = qrcode.WriteFile(string(priKey5Bytes), qrerrorrecovery, qrsize, PriKey5FileName+".png")
+		if err != nil {
+			panic(err)
+		}
 
 	} else if command == "encrypt" {
 		ResticEncryptedKeyFile := path.Join(destinationPath, fmt.Sprintf("password.key.%s", passwordKeyExtension))
